@@ -5,7 +5,6 @@ import liga.medical.medicalmonitoring.core.model.Patient;
 import liga.medical.medicalmonitoring.dto.PatientDto;
 import org.springframework.stereotype.Service;
 import liga.medical.medicalmonitoring.core.repository.PatientRepository;
-
 import java.util.List;
 
 @Service

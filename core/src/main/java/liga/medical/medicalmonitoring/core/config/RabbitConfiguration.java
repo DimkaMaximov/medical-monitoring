@@ -40,6 +40,11 @@ public class RabbitConfiguration {
         return new Queue("patient-alert");
     }
 
+    @Bean
+    public Queue ambulanceQueue() {
+        return new Queue("ambulance-alert");
+    }
+
     //Получатель сообщений, читающий очереди
 //    @Bean
 //    public SimpleMessageListenerContainer messageListenerContainer() {

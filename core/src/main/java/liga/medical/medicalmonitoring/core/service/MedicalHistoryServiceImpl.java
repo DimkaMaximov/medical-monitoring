@@ -1,9 +1,11 @@
 package liga.medical.medicalmonitoring.core.service;
 
 import liga.medical.medicalmonitoring.core.mapper.MedicalHistoryMapper;
+import liga.medical.medicalmonitoring.core.model.MedicalHistory;
 import liga.medical.medicalmonitoring.dto.MedicalHistoryDto;
 import org.springframework.stereotype.Service;
 import liga.medical.medicalmonitoring.core.repository.MedicalHistoryRepository;
+import java.util.List;
 
 @Service
 public class MedicalHistoryServiceImpl {
@@ -18,6 +20,10 @@ public class MedicalHistoryServiceImpl {
 
     public MedicalHistoryDto save(MedicalHistoryDto dto) {
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
+    }
+
+    public List<MedicalHistory> findAll() {
+        return repository.findAll();
     }
     
 }

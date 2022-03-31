@@ -1,5 +1,6 @@
 package liga.medical.medicalmonitoring.core.controller.rest;
 
+import liga.medical.medicalmonitoring.core.model.MedicalHistory;
 import liga.medical.medicalmonitoring.core.service.MedicalHistoryServiceImpl;
 import liga.medical.medicalmonitoring.dto.MedicalHistoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/medical")
@@ -27,8 +29,7 @@ public class MedicalHistoryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<MedicalHistoryDto> getAll(@RequestBody MedicalHistoryDto medicalHistoryDto) {
-        return ResponseEntity.ok(service.save(medicalHistoryDto));
+    public ResponseEntity<List<MedicalHistory>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
-
 }
