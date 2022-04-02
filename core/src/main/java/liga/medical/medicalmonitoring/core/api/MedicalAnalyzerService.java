@@ -4,5 +4,5 @@ import liga.medical.DeviceIdentificationDto;
 
 public interface MedicalAnalyzerService {
 
-    void analyze(DeviceIdentificationDto deviceInfo);
+    void analyze(DeviceIdentificationDto deviceInfo, Object patient);
 }

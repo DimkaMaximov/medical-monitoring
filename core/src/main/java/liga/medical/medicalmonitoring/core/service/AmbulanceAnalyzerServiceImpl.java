@@ -16,13 +16,13 @@ public class AmbulanceAnalyzerServiceImpl implements MedicalAnalyzerService {
     private AmqpTemplate amqpTemplate;
 
     @Override
-    public void analyze(DeviceIdentificationDto deviceInfo) {
+    public void analyze(DeviceIdentificationDto deviceInfo, Object patient) {
         if (deviceInfo == null) return;
         String message = "";
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            message = objectMapper.writeValueAsString(deviceInfo);
+            message = "Данные пациента: " + patient.toString() + " Показатели: " + objectMapper.writeValueAsString(deviceInfo);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

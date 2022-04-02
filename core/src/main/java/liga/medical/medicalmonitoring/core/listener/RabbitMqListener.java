@@ -49,17 +49,14 @@ public class RabbitMqListener {
 
         try {
             DeviceIdentificationDto deviceInfo = objectMapper.readValue(message, DeviceIdentificationDto.class);
-            Object list = feignClient.getPatient(deviceInfo.getOwnerId());
+            Object patient = feignClient.getPatient(deviceInfo.getOwnerId());
             log.info("Получено сообщение о необходимости оказания первой помощи: {}", message);
-            log.info("Получены данные пациента: {}", list.toString());
-            log.info("Информация передана скорой помощи");
-            medicalAnalyzerService.analyze(deviceInfo);
+            log.info("Информация передана скорой помощи. Данные пациента: {}. Показатели: {}.", patient.toString(), message);
+            medicalAnalyzerService.analyze(deviceInfo, patient);
         } catch (JsonProcessingException e) {
             log.info("Error while parsing incoming message {}", e.getMessage());
         }
 
         // передавать в сервис логирования все поступающие показания
-
-        log.info("Получены данные пациента " + message);
     }
 }
