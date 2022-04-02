@@ -1,4 +1,4 @@
-package liga.medical.medicalmonitoring.core;
+package liga.medical.medicalmonitoring.core.aop;
 
 import liga.medical.medicalmonitoring.core.model.LogEntity;
 import liga.medical.medicalmonitoring.core.repository.LogEntityRepository;

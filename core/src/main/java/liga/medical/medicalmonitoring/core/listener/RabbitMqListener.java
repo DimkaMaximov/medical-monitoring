@@ -37,16 +37,19 @@ public class RabbitMqListener {
     @Autowired
     private MedicalAnalyzerService medicalAnalyzerService;
 
+    PatientServiceFeignClient feignClient;
+
+    public RabbitMqListener() {
+        this.feignClient = Feign.builder()
+                .contract(new SpringMvcContract())
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(PatientServiceFeignClient.class, "http://localhost:8021");
+    }
+
     @Loggable
     @RabbitListener(queues = "patient-alert")
     public void processAppQueue(String message) {
-
-        PatientServiceFeignClient feignClient =
-                Feign.builder()
-                        .contract(new SpringMvcContract())
-                        .encoder(new JacksonEncoder())
-                        .decoder(new JacksonDecoder())
-                        .target(PatientServiceFeignClient.class, "http://localhost:8021");
 
         try {
             DeviceIdentificationDto deviceInfo = objectMapper.readValue(message, DeviceIdentificationDto.class);
@@ -57,7 +60,5 @@ public class RabbitMqListener {
         } catch (JsonProcessingException e) {
             log.info("Error while parsing incoming message {}", e.getMessage());
         }
-
-        // передавать в сервис логирования все поступающие показания
     }
 }
