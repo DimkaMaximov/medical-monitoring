@@ -21,6 +21,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitMqListener {
 
+     /**
+     * in common-module in PatientServiceFeignClient remake method to this kind,
+     * like it is in person-service module:
+     *
+     *     @GetMapping("/patient/{id}")
+     *     Object getPatient(@PathVariable ("id") Long id);
+     */
+
     Logger log = LoggerFactory.getLogger(RabbitMqListener.class);
 
     @Autowired
@@ -33,13 +41,6 @@ public class RabbitMqListener {
     @RabbitListener(queues = "patient-alert")
     public void processAppQueue(String message) {
 
-        // реализовать сохранение в БД случаев на которые должны реагировать
-        // отслеживать скорую, которая освобождается, и передавать информацию на вызов
-
-        // создать очередь для скорой и передавать ей показатели и инфу пользователя
-        //передавать данные пациента и медкарты
-        //из person servise get person data и address по ownerid
-        //String [] ownerId = message.split("\\D+");
         PatientServiceFeignClient feignClient =
                 Feign.builder()
                         .contract(new SpringMvcContract())
