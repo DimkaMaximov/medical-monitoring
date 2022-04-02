@@ -40,6 +40,7 @@ public class RabbitConfiguration {
         return new Queue("patient-alert");
     }
 
+    // имитация очереди сообщений скорой помощи
     @Bean
     public Queue ambulanceQueue() {
         return new Queue("ambulance-alert");

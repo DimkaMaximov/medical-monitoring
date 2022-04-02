@@ -1,7 +1,11 @@
 package liga.medical.medicalmonitoring.core.listener;
 
+import api.PatientServiceFeignClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import liga.medical.DeviceIdentificationDto;
 import liga.medical.medicalmonitoring.core.annotations.Loggable;
 import liga.medical.medicalmonitoring.core.api.MedicalAnalyzerService;
@@ -10,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.stereotype.Component;
 
 @EnableRabbit
@@ -35,23 +40,26 @@ public class RabbitMqListener {
         //передавать данные пациента и медкарты
         //из person servise get person data и address по ownerid
         //String [] ownerId = message.split("\\D+");
+        PatientServiceFeignClient feignClient =
+                Feign.builder()
+                        .contract(new SpringMvcContract())
+                        .encoder(new JacksonEncoder())
+                        .decoder(new JacksonDecoder())
+                        .target(PatientServiceFeignClient.class, "http://localhost:8021");
 
         try {
             DeviceIdentificationDto deviceInfo = objectMapper.readValue(message, DeviceIdentificationDto.class);
-            medicalAnalyzerService.analyze(deviceInfo);
+            Object list = feignClient.getPatient(deviceInfo.getOwnerId());
             log.info("Получено сообщение о необходимости оказания первой помощи: {}", message);
+            log.info("Получены данные пациента: {}", list.toString());
+            log.info("Информация передана скорой помощи");
+            medicalAnalyzerService.analyze(deviceInfo);
         } catch (JsonProcessingException e) {
             log.info("Error while parsing incoming message {}", e.getMessage());
         }
 
-        // TODO: передавать в сервис логирования все поступающие показания
+        // передавать в сервис логирования все поступающие показания
 
         log.info("Получены данные пациента " + message);
-    }
-
-    // тестовый метод имитирующие уведомления скорой помощи
-    @RabbitListener(queues = "ambulance-alert")
-    public void processAmbulanceQueue(String message) {
-        log.info("Уведомление скорой помощи: НЕОБХОДИМА ПОМОЩЬ " + message);
     }
 }
